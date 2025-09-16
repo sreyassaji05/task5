@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countdown Timer</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #6a0dad, #9b59b6);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .countdown {
+      display: flex;
+      gap: 20px;
+      font-size: 2rem;
+      margin: 20px 0;
+    }
+
+    .time-box {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 10px;
+      min-width: 100px;
+      transition: transform 0.2s;
+    }
+
+    .time-box:hover {
+      transform: scale(1.1);
+    }
+
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    input {
+      width: 250px;
+    }
+
+    button {
+      background: #fff;
+      color: #6a0dad;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    button:hover {
+      background: #ddd;
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 600px) {
+      .countdown {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>⏳ Countdown Timer</h1>
+  
+  <input type="datetime-local" id="datetime" />
+  <br>
+  <button onclick="startCountdown()">Start Countdown</button>
+  <button onclick="resetCountdown()">Reset</button>
+
+  <div class="countdown" id="countdown">
+    <div class="time-box"><span id="days">00</span><br>Days</div>
+    <div class="time-box"><span id="hours">00</span><br>Hours</div>
+    <div class="time-box"><span id="minutes">00</span><br>Minutes</div>
+    <div class="time-box"><span id="seconds">00</span><br>Seconds</div>
+  </div>
+
+  <script>
+    let countdownInterval;
+
+    function startCountdown() {
+      clearInterval(countdownInterval); // reset any running timer
+      const dateInput = document.getElementById('datetime').value;
+      if (!dateInput) {
+        alert("Please select a future date and time!");
+        return;
+      }
+      const endTime = new Date(dateInput).getTime();
+
+      countdownInterval = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = endTime - now;
+
+        if (distance <= 0) {
+          clearInterval(countdownInterval);
+          document.getElementById('countdown').innerHTML = "<h2>🎉 Time's Up!</h2>";
+          return;
+        }
+
+        document.getElementById('days').innerText = Math.floor(distance / (1000 * 60 * 60 * 24));
+        document.getElementById('hours').innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        document.getElementById('minutes').innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        document.getElementById('seconds').innerText = Math.floor((distance % (1000 * 60)) / 1000);
+      }, 1000);
+    }
+
+    function resetCountdown() {
+      clearInterval(countdownInterval);
+      document.getElementById('days').innerText = "00";
+      document.getElementById('hours').innerText = "00";
+      document.getElementById('minutes').innerText = "00";
+      document.getElementById('seconds').innerText = "00";
+      document.getElementById('datetime').value = "";
+    }
+  </script>
+
+</body>
+</html>
